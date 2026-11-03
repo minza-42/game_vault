@@ -1,0 +1,90 @@
+
+@use "./variables" as *;
+
+// Tablet
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 190px;
+  }
+
+  .dashboard {
+    padding: 2rem;
+
+    &__stats {
+      gap: 1rem;
+    }
+  }
+}
+
+// Mobile
+@media (max-width: 768px) {
+  .header {
+    height: 65px;
+    padding: 0 1rem;
+
+    &__logo h1 {
+      font-size: 1.2rem;
+    }
+
+    &__profile {
+      font-size: 0.8rem;
+    }
+  }
+
+  .app__layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 0.75rem;
+
+    border-right: none;
+    border-bottom: 1px solid $border-color;
+
+    &__nav {
+      flex-direction: row;
+      justify-content: space-around;
+      gap: 0.25rem;
+
+      a {
+        padding: 0.75rem 0.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .dashboard {
+    padding: 1.5rem;
+
+    &__welcome h2 {
+      font-size: 1.6rem;
+    }
+
+    &__stats {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Small mobile
+@media (max-width: 480px) {
+  .header {
+    &__profile {
+      display: none;
+    }
+  }
+
+  .dashboard {
+    padding: 1rem;
+
+    &__welcome h2 {
+      font-size: 1.4rem;
+    }
+  }
+
+  .stat-card {
+    padding: 1.2rem;
+  }
+}

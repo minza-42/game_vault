@@ -1,0 +1,125 @@
+@use "./variables" as *;
+@use "./global";
+@use "./responsive";
+
+.app {
+  min-height: 100vh;
+}
+
+.header {
+  height: 75px;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: $color-surface;
+  border-bottom: 1px solid $border-color;
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    h1 {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__icon {
+    font-size: 1.8rem;
+  }
+
+  &__profile {
+    color: $color-muted;
+  }
+}
+
+.app__layout {
+  display: flex;
+  min-height: calc(100vh - 75px);
+}
+
+.sidebar {
+  width: 230px;
+  padding: 2rem 1rem;
+  background: $color-surface;
+  border-right: 1px solid $border-color;
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    a {
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      color: $color-muted;
+
+      &:hover,
+      &.active {
+        background: rgba($color-primary, 0.15);
+        color: $color-text;
+      }
+    }
+  }
+}
+
+.dashboard {
+  flex: 1;
+  padding: 3rem;
+
+  &__welcome {
+    margin-bottom: 2.5rem;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $color-muted;
+    }
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+.stat-card {
+  padding: 1.5rem;
+  background: $color-surface;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+
+  h3 {
+    color: $color-muted;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 160px;
+  }
+
+  .dashboard {
+    padding: 1.5rem;
+
+    &__stats {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .header {
+    padding: 0 1rem;
+  }
+}
