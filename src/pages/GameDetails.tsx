@@ -1,19 +1,24 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import useGames from "../hooks/useGames";
 import useUpdateGame from "../hooks/useUpdateGame";
+import useDeleteGame from "../hooks/useDeleteGame";
 import type { GameStatus } from "../types/Game";
 
 function GameDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const { games, loading, error } = useGames();
+
   const { saveChanges, loading: saving, error: saveError } = useUpdateGame();
+
+  const { removeGame, loading: deleting, error: deleteError } = useDeleteGame();
 
   const [editing, setEditing] = useState(false);
   const [status, setStatus] = useState<GameStatus>("want");
   const [rating, setRating] = useState<number | null>(null);
   const [notes, setNotes] = useState("");
-
   const [imageError, setImageError] = useState(false);
 
   if (loading) {
@@ -53,6 +58,23 @@ function GameDetails() {
       window.location.reload();
     } catch {
       // Error is displayed below the form.
+    }
+  }
+
+  async function handleDelete() {
+    if (!id || !game) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${game.title}?`,
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await removeGame(id);
+      navigate("/games");
+    } catch {
+      // Error is displayed on the page.
     }
   }
 
@@ -174,6 +196,16 @@ function GameDetails() {
               >
                 Edit Game
               </button>
+
+              <button
+                className="game-details__delete-button"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting..." : "Delete Game"}
+              </button>
+
+              {deleteError && <p className="form-error">{deleteError}</p>}
             </>
           )}
         </div>

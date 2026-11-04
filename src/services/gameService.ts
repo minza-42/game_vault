@@ -63,3 +63,14 @@ export async function updateGame(
 
   return response.json();
 }
+
+// DELETE - Remove a game
+export async function deleteGame(id: string): Promise<void> {
+  const response = await fetch(`${BASE_URL}/games/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not delete game");
+  }
+}
