@@ -1,7 +1,9 @@
+
 @use "./variables" as *;
 
 .dashboard {
   flex: 1;
+  min-width: 0;
   padding: 3rem;
 
   &__welcome {
@@ -25,19 +27,113 @@
 }
 
 .stat-card {
-  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  padding: 1.75rem;
   background: $color-surface;
   border: 1px solid $border-color;
   border-radius: 12px;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: $color-primary;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  // Decorative accent
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: $color-primary;
+  }
 
   h3 {
     color: $color-muted;
     font-size: 0.95rem;
+    font-weight: 500;
     margin-bottom: 1rem;
   }
 
   p {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  // Individual card accents
+  &:nth-child(1)::before {
+    background: #8b5cf6;
+  }
+
+  &:nth-child(2)::before {
+    background: #38bdf8;
+  }
+
+  &:nth-child(3)::before {
+    background: #4ade80;
+  }
+
+  &:nth-child(4)::before {
+    background: #c084fc;
+  }
+
+  &:nth-child(5)::before {
+    background: #f87171;
+  }
+
+  &:nth-child(6)::before {
+    background: #fbbf24;
+  }
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .dashboard {
+    padding: 2rem;
+
+    &__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1.5rem;
+
+    &__welcome {
+      margin-bottom: 2rem;
+
+      h2 {
+        font-size: 1.75rem;
+      }
+    }
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+
+    p {
+      font-size: 2rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 1rem;
+
+    &__stats {
+      grid-template-columns: 1fr;
+    }
   }
 }
