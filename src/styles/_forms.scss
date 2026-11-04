@@ -11,6 +11,7 @@
     font-weight: 600;
     margin-top: 0.5rem;
   }
+  
 
   input,
   select {
@@ -40,4 +41,40 @@
 
 .form-error {
   color: #f87171;
+}
+
+
+.game-form {
+  textarea {
+    width: 100%;
+    padding: 0.85rem;
+    background: $color-surface;
+    color: $color-text;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font: inherit;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.2s ease;
+
+    &::placeholder {
+      color: $color-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
+}
+
+.game-form {
+  input,
+  select,
+  textarea {
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
 }

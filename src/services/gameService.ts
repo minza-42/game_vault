@@ -16,10 +16,14 @@ export async function getGames(): Promise<Game[]> {
 }
 
 // POST - Create a new game
-interface NewGame {
+export interface NewGame {
   title: string;
   platform: string;
   status: GameStatus;
+  rating?: number | null;
+  notes?: string;
+  steamAppId?: number;
+  steamPlaytime?: number;
 }
 
 export async function createGame(game: NewGame): Promise<Game> {

@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { createGame } from "../services/gameService";
-import type { Game, GameStatus } from "../types/Game";
-
-interface NewGame {
-  title: string;
-  platform: string;
-  status: GameStatus;
-}
+import type { Game } from "../types/Game";
+import type { NewGame } from "../services/gameService";
 
 function useSaveGame() {
   const [loading, setLoading] = useState(false);

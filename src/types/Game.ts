@@ -10,4 +10,8 @@ export interface Game {
   notes: string;
   createdAt: string;
   updatedAt: string;
+
+  // Steam information
+  steamAppId?: number;
+  steamPlaytime?: number;
 }

@@ -10,6 +10,8 @@ function AddGame() {
   const [title, setTitle] = useState("");
   const [platform, setPlatform] = useState("");
   const [status, setStatus] = useState<GameStatus>("want");
+  const [rating, setRating] = useState("");
+  const [notes, setNotes] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,6 +21,8 @@ function AddGame() {
         title,
         platform,
         status,
+        rating: rating === "" ? null : Number(rating),
+        notes,
       });
 
       navigate("/games");
@@ -68,6 +72,29 @@ function AddGame() {
           <option value="completed">Completed</option>
           <option value="dropped">Dropped</option>
         </select>
+
+        <label htmlFor="rating">Rating</label>
+        <select
+          id="rating"
+          value={rating}
+          onChange={(event) => setRating(event.target.value)}
+        >
+          <option value="">Not rated</option>
+          {Array.from({ length: 5 }, (_, index) => (
+            <option key={index + 1} value={index + 1}>
+              {index + 1} {index === 0 ? "Star" : "Stars"}
+            </option>
+          ))}
+        </select>
+
+        <label htmlFor="notes">Notes</label>
+        <textarea
+          id="notes"
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+          placeholder="Write your thoughts about the game..."
+          rows={4}
+        />
 
         {error && <p className="form-error">{error}</p>}
 

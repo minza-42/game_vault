@@ -21,9 +21,13 @@
       border-radius: 8px;
       color: $color-muted;
 
-      &:hover,
+      &:hover {
+        background: rgba($color-primary, 0.1);
+        color: $color-text;
+      }
+
       &.active {
-        background: rgba($color-primary, 0.15);
+        background: rgba($color-primary, 0.18);
         color: $color-text;
       }
     }
