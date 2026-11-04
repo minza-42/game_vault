@@ -1,15 +1,39 @@
-import type { Game } from "../types/Game";
+import type { Game, GameStatus } from "../types/Game";
 
 const API_URL = "https://questlog-api.vercel.app/api";
 const HANDLE = "gamevault-minai";
 
 const BASE_URL = `${API_URL}/${HANDLE}`;
 
+// GET - Fetch all games
 export async function getGames(): Promise<Game[]> {
   const response = await fetch(`${BASE_URL}/games`);
 
   if (!response.ok) {
     throw new Error("Could not fetch games");
+  }
+
+  return response.json();
+}
+
+// POST - Create a new game
+interface NewGame {
+  title: string;
+  platform: string;
+  status: GameStatus;
+}
+
+export async function createGame(game: NewGame): Promise<Game> {
+  const response = await fetch(`${BASE_URL}/games`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(game),
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not create game");
   }
 
   return response.json();
