@@ -1,5 +1,7 @@
+
 @use "./variables" as *;
 
+// Main page
 .page {
   flex: 1;
   min-width: 0;
@@ -15,6 +17,7 @@
   }
 }
 
+// Games section
 .games {
   &__header {
     display: flex;
@@ -36,7 +39,8 @@
 
   &__empty {
     margin-top: 2rem;
-    padding: 3rem;
+    padding: 2rem;
+    color: $color-muted;
     text-align: center;
     background: $color-surface;
     border: 1px solid $border-color;
@@ -44,6 +48,7 @@
   }
 }
 
+// Game card
 .game-card {
   min-width: 0;
   display: block;
@@ -53,10 +58,16 @@
   background: $color-surface;
   border: 1px solid $border-color;
   border-radius: 12px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
     transform: translateY(-4px);
+    border-color: $color-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 3px;
   }
 
   &__image {
@@ -105,6 +116,7 @@
     h3 {
       font-size: 1rem;
       margin-bottom: 0.5rem;
+      overflow-wrap: anywhere;
     }
   }
 
@@ -118,5 +130,81 @@
     color: #fbbf24;
     letter-spacing: 2px;
     font-size: 0.9rem;
+  }
+}
+
+// Search and filters
+.games__filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 2rem 0 1rem;
+  padding: 1.5rem;
+  background: $color-surface;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: $color-muted;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  input,
+  select {
+    width: 100%;
+    min-height: 42px;
+    padding: 0.7rem 0.9rem;
+    color: $color-text;
+    background: $color-background;
+    border: 1px solid $border-color;
+    border-radius: 7px;
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      border-color: $color-primary;
+    }
+  }
+}
+
+.games__search {
+  width: 100%;
+}
+
+.games__filter-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.games__clear-filters {
+  align-self: flex-start;
+  padding: 0.65rem 1rem;
+  color: $color-text;
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: $color-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 3px;
+  }
+}
+
+// Mobile filters
+@media (max-width: 768px) {
+  .games__filter-group {
+    grid-template-columns: 1fr;
   }
 }

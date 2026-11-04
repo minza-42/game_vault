@@ -1,13 +1,66 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
+import type { GameStatus } from "../types/Game";
+
+type SortOption = "title-asc" | "title-desc" | "rating-desc";
+type StatusFilter = "all" | GameStatus;
 
 function Games() {
   const { games, loading, error } = useGames();
 
+  // Filter states
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [platformFilter, setPlatformFilter] = useState("all");
+  const [sortBy, setSortBy] = useState<SortOption>("title-asc");
+
+  // Get all unique platforms
+  const platforms = useMemo(() => {
+    return Array.from(new Set(games.map((game) => game.platform))).sort();
+  }, [games]);
+
+  // Filter and sort games
+  const filteredGames = useMemo(() => {
+    const searchTerm = search.trim().toLowerCase();
+
+    return games
+      .filter((game) => game.title.toLowerCase().includes(searchTerm))
+      .filter((game) => statusFilter === "all" || game.status === statusFilter)
+      .filter(
+        (game) => platformFilter === "all" || game.platform === platformFilter,
+      )
+      .sort((a, b) => {
+        switch (sortBy) {
+          case "title-desc":
+            return b.title.localeCompare(a.title);
+
+          case "rating-desc":
+            // Games without ratings appear last
+            if (a.rating === null) return 1;
+            if (b.rating === null) return -1;
+            return b.rating - a.rating;
+
+          default:
+            return a.title.localeCompare(b.title);
+        }
+      });
+  }, [games, search, statusFilter, platformFilter, sortBy]);
+
+  // Clear all filters
+  function clearFilters() {
+    setSearch("");
+    setStatusFilter("all");
+    setPlatformFilter("all");
+    setSortBy("title-asc");
+  }
+
+  // Loading state
   if (loading) {
     return <main className="page">Loading games...</main>;
   }
 
+  // Error state
   if (error) {
     return <main className="page">Error: {error}</main>;
   }
@@ -20,14 +73,100 @@ function Games() {
           <p>Your personal gaming library.</p>
         </div>
 
-        <span>{games.length} Games</span>
+        <span>
+          {filteredGames.length} / {games.length} Games
+        </span>
       </div>
 
+      {/* Search and filters */}
+      {games.length > 0 && (
+        <section className="games__filters">
+          <div className="games__search">
+            <label htmlFor="game-search">Search games</label>
+
+            <input
+              id="game-search"
+              type="search"
+              placeholder="Search by game title..."
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+          </div>
+
+          <div className="games__filter-group">
+            <div>
+              <label htmlFor="status-filter">Status</label>
+
+              <select
+                id="status-filter"
+                value={statusFilter}
+                onChange={(event) =>
+                  setStatusFilter(event.target.value as StatusFilter)
+                }
+              >
+                <option value="all">All statuses</option>
+                <option value="playing">Playing</option>
+                <option value="completed">Completed</option>
+                <option value="want">Want to Play</option>
+                <option value="dropped">Dropped</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="platform-filter">Platform</label>
+
+              <select
+                id="platform-filter"
+                value={platformFilter}
+                onChange={(event) => setPlatformFilter(event.target.value)}
+              >
+                <option value="all">All platforms</option>
+
+                {platforms.map((platform) => (
+                  <option key={platform} value={platform}>
+                    {platform}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="sort-games">Sort by</label>
+
+              <select
+                id="sort-games"
+                value={sortBy}
+                onChange={(event) =>
+                  setSortBy(event.target.value as SortOption)
+                }
+              >
+                <option value="title-asc">Title (A-Z)</option>
+                <option value="title-desc">Title (Z-A)</option>
+                <option value="rating-desc">Highest rating</option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            className="games__clear-filters"
+            onClick={clearFilters}
+            type="button"
+          >
+            Clear filters
+          </button>
+        </section>
+      )}
+
+      {/* Empty library or filtered results */}
       {games.length === 0 ? (
-        <p>Your library is empty. Add your first game!</p>
+        <p className="games__empty">
+          Your library is empty. Add your first game!
+        </p>
+      ) : filteredGames.length === 0 ? (
+        <p className="games__empty">No games match your filters.</p>
       ) : (
         <div className="games__grid">
-          {games.map((game) => (
+          {filteredGames.map((game) => (
             <Link to={`/games/${game.id}`} className="game-card" key={game.id}>
               <div className="game-card__image">
                 <img src={game.coverUrl} alt={`${game.title} cover`} />
@@ -45,7 +184,7 @@ function Games() {
                 <p className="game-card__platform">{game.platform}</p>
 
                 <div className="game-card__rating">
-                  {game.rating
+                  {game.rating !== null
                     ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
                     : "Not rated"}
                 </div>
