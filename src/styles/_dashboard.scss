@@ -1,0 +1,43 @@
+@use "./variables" as *;
+
+.dashboard {
+  flex: 1;
+  padding: 3rem;
+
+  &__welcome {
+    margin-bottom: 2.5rem;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $color-muted;
+    }
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+.stat-card {
+  padding: 1.5rem;
+  background: $color-surface;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+
+  h3 {
+    color: $color-muted;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+}

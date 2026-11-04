@@ -1,0 +1,29 @@
+@use "./variables" as *;
+
+.header {
+  height: 75px;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: $color-surface;
+  border-bottom: 1px solid $border-color;
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    h1 {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__icon {
+    font-size: 1.8rem;
+  }
+
+  &__profile {
+    color: $color-muted;
+  }
+}
