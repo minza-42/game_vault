@@ -123,3 +123,27 @@
     padding: 0 1rem;
   }
 }
+
+.page {
+  flex: 1;
+  min-width: 0;
+  padding: 3rem;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  > p {
+    color: $color-muted;
+  }
+}
+
+.games__empty {
+  margin-top: 2rem;
+  padding: 3rem;
+  text-align: center;
+  background: $color-surface;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+}
