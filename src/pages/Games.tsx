@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
+import useLocalStorage from "../hooks/useLocalStorage";
 import type { GameStatus } from "../types/Game";
 
 type SortOption = "title-asc" | "title-desc" | "rating-desc";
@@ -9,11 +10,20 @@ type StatusFilter = "all" | GameStatus;
 function Games() {
   const { games, loading, error } = useGames();
 
-  // Filter states
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [platformFilter, setPlatformFilter] = useState("all");
-  const [sortBy, setSortBy] = useState<SortOption>("title-asc");
+  // Filter states saved in LocalStorage
+  const [search, setSearch] = useLocalStorage("games-search", "");
+  const [statusFilter, setStatusFilter] = useLocalStorage<StatusFilter>(
+    "games-status",
+    "all",
+  );
+  const [platformFilter, setPlatformFilter] = useLocalStorage(
+    "games-platform",
+    "all",
+  );
+  const [sortBy, setSortBy] = useLocalStorage<SortOption>(
+    "games-sort",
+    "title-asc",
+  );
 
   // Get all unique platforms
   const platforms = useMemo(() => {
@@ -36,7 +46,6 @@ function Games() {
             return b.title.localeCompare(a.title);
 
           case "rating-desc":
-            // Games without ratings appear last
             if (a.rating === null) return 1;
             if (b.rating === null) return -1;
             return b.rating - a.rating;
@@ -55,12 +64,10 @@ function Games() {
     setSortBy("title-asc");
   }
 
-  // Loading state
   if (loading) {
     return <main className="page">Loading games...</main>;
   }
 
-  // Error state
   if (error) {
     return <main className="page">Error: {error}</main>;
   }
@@ -78,12 +85,10 @@ function Games() {
         </span>
       </div>
 
-      {/* Search and filters */}
       {games.length > 0 && (
         <section className="games__filters">
           <div className="games__search">
             <label htmlFor="game-search">Search games</label>
-
             <input
               id="game-search"
               type="search"
@@ -96,7 +101,6 @@ function Games() {
           <div className="games__filter-group">
             <div>
               <label htmlFor="status-filter">Status</label>
-
               <select
                 id="status-filter"
                 value={statusFilter}
@@ -114,7 +118,6 @@ function Games() {
 
             <div>
               <label htmlFor="platform-filter">Platform</label>
-
               <select
                 id="platform-filter"
                 value={platformFilter}
@@ -132,7 +135,6 @@ function Games() {
 
             <div>
               <label htmlFor="sort-games">Sort by</label>
-
               <select
                 id="sort-games"
                 value={sortBy}
@@ -157,7 +159,6 @@ function Games() {
         </section>
       )}
 
-      {/* Empty library or filtered results */}
       {games.length === 0 ? (
         <p className="games__empty">
           Your library is empty. Add your first game!
