@@ -77,6 +77,33 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
   }
+
+   .game-details {
+    &__content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    &__cover-wrapper {
+      max-width: 280px;
+    }
+
+    &__info h2 {
+      font-size: 2rem;
+    }
+
+    &__edit {
+      padding: 1rem;
+    }
+
+    &__actions {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
 }
 
 // Small mobile

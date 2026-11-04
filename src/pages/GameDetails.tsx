@@ -1,10 +1,19 @@
-import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
+import useUpdateGame from "../hooks/useUpdateGame";
+import type { GameStatus } from "../types/Game";
 
 function GameDetails() {
   const { id } = useParams();
   const { games, loading, error } = useGames();
+  const { saveChanges, loading: saving, error: saveError } = useUpdateGame();
+
+  const [editing, setEditing] = useState(false);
+  const [status, setStatus] = useState<GameStatus>("want");
+  const [rating, setRating] = useState<number | null>(null);
+  const [notes, setNotes] = useState("");
+
   const [imageError, setImageError] = useState(false);
 
   if (loading) {
@@ -24,6 +33,27 @@ function GameDetails() {
         <Link to="/games">Back to My Games</Link>
       </main>
     );
+  }
+
+  function startEditing() {
+    if (!game) return;
+
+    setStatus(game.status);
+    setRating(game.rating);
+    setNotes(game.notes || "");
+    setEditing(true);
+  }
+
+  async function handleSave() {
+    if (!id) return;
+
+    try {
+      await saveChanges(id, { status, rating, notes });
+      setEditing(false);
+      window.location.reload();
+    } catch {
+      // Error is displayed below the form.
+    }
   }
 
   return (
@@ -60,20 +90,92 @@ function GameDetails() {
 
           <p className="game-details__platform">{game.platform}</p>
 
-          <div className="game-details__rating">
-            <span className="game-details__label">My Rating</span>
+          {editing ? (
+            <div className="game-details__edit">
+              <h3>Edit Game</h3>
 
-            <p>
-              {game.rating !== null
-                ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
-                : "Not rated"}
-            </p>
-          </div>
+              <label htmlFor="game-status">Status</label>
+              <select
+                id="game-status"
+                value={status}
+                onChange={(event) =>
+                  setStatus(event.target.value as GameStatus)
+                }
+              >
+                <option value="want">Want to Play</option>
+                <option value="playing">Playing</option>
+                <option value="completed">Completed</option>
+                <option value="dropped">Dropped</option>
+              </select>
 
-          <div className="game-details__notes">
-            <h3>My Notes</h3>
-            <p>{game.notes || "No notes yet."}</p>
-          </div>
+              <label htmlFor="game-rating">Rating</label>
+              <select
+                id="game-rating"
+                value={rating ?? ""}
+                onChange={(event) =>
+                  setRating(
+                    event.target.value === ""
+                      ? null
+                      : Number(event.target.value),
+                  )
+                }
+              >
+                <option value="">Not rated</option>
+                <option value="1">1 star</option>
+                <option value="2">2 stars</option>
+                <option value="3">3 stars</option>
+                <option value="4">4 stars</option>
+                <option value="5">5 stars</option>
+              </select>
+
+              <label htmlFor="game-notes">My Notes</label>
+              <textarea
+                id="game-notes"
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+                rows={4}
+              />
+
+              {saveError && <p className="form-error">{saveError}</p>}
+
+              <div className="game-details__actions">
+                <button onClick={handleSave} disabled={saving}>
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setEditing(false)}
+                  disabled={saving}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="game-details__rating">
+                <span className="game-details__label">My Rating</span>
+                <p>
+                  {game.rating !== null
+                    ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
+                    : "Not rated"}
+                </p>
+              </div>
+
+              <div className="game-details__notes">
+                <h3>My Notes</h3>
+                <p>{game.notes || "No notes yet."}</p>
+              </div>
+
+              <button
+                className="game-details__edit-button"
+                onClick={startEditing}
+              >
+                Edit Game
+              </button>
+            </>
+          )}
         </div>
       </div>
     </main>

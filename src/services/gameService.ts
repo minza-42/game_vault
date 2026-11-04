@@ -2,7 +2,6 @@ import type { Game, GameStatus } from "../types/Game";
 
 const API_URL = "https://questlog-api.vercel.app/api";
 const HANDLE = "gamevault-minai";
-
 const BASE_URL = `${API_URL}/${HANDLE}`;
 
 // GET - Fetch all games
@@ -34,6 +33,32 @@ export async function createGame(game: NewGame): Promise<Game> {
 
   if (!response.ok) {
     throw new Error("Could not create game");
+  }
+
+  return response.json();
+}
+
+// PATCH - Update an existing game
+interface UpdateGame {
+  status?: GameStatus;
+  rating?: number | null;
+  notes?: string;
+}
+
+export async function updateGame(
+  id: string,
+  updates: UpdateGame,
+): Promise<Game> {
+  const response = await fetch(`${BASE_URL}/games/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updates),
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not update game");
   }
 
   return response.json();
