@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Games from "./pages/Games";
 import AddGame from "./pages/AddGame";
+import GameDetails from "./pages/GameDetails";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/games" element={<Games />} />
             <Route path="/games/add" element={<AddGame />} />
+            <Route path="/games/:id" element={<GameDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

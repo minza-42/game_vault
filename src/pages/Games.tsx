@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
 
 function Games() {
@@ -27,9 +28,10 @@ function Games() {
       ) : (
         <div className="games__grid">
           {games.map((game) => (
-            <article className="game-card" key={game.id}>
+            <Link to={`/games/${game.id}`} className="game-card" key={game.id}>
               <div className="game-card__image">
                 <img src={game.coverUrl} alt={`${game.title} cover`} />
+
                 <span
                   className={`game-card__status game-card__status--${game.status}`}
                 >
@@ -48,7 +50,7 @@ function Games() {
                     : "Not rated"}
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       )}
