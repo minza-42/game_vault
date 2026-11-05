@@ -32,75 +32,119 @@ function AddGame() {
   }
 
   return (
-    <main className="page">
-      <h2>Add a Game</h2>
-      <p>Add a new game to your library.</p>
+    <main className="page add-game">
+      <section className="add-game__header">
+        <span className="add-game__eyebrow">
+          YOUR PERSONAL GAMING COLLECTION
+        </span>
+
+        <h2>Add a new game</h2>
+
+        <p>Expand your collection. Every game has a story.</p>
+      </section>
 
       <form className="game-form" onSubmit={handleSubmit}>
-        <label htmlFor="title">Game Title</label>
-        <input
-          id="title"
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Enter game title"
-          required
-        />
+        <div className="game-form__heading">
+          <div>
+            <h3>Game Information</h3>
+            <p>Enter the details of your new game.</p>
+          </div>
 
-        <label htmlFor="platform">Platform</label>
-        <select
-          id="platform"
-          value={platform}
-          onChange={(event) => setPlatform(event.target.value)}
-          required
-        >
-          <option value="">Choose platform</option>
-          <option value="PC">PC</option>
-          <option value="PlayStation 5">PlayStation 5</option>
-          <option value="Xbox">Xbox</option>
-          <option value="Switch">Nintendo Switch</option>
-        </select>
+          <span className="game-form__icon" aria-hidden="true">
+            🎮
+          </span>
+        </div>
 
-        <label htmlFor="status">Status</label>
-        <select
-          id="status"
-          value={status}
-          onChange={(event) => setStatus(event.target.value as GameStatus)}
-        >
-          <option value="want">Want to Play</option>
-          <option value="playing">Playing</option>
-          <option value="completed">Completed</option>
-          <option value="dropped">Dropped</option>
-        </select>
+        <div className="game-form__grid">
+          <div className="game-form__field">
+            <label htmlFor="title">Game Title</label>
 
-        <label htmlFor="rating">Rating</label>
-        <select
-          id="rating"
-          value={rating}
-          onChange={(event) => setRating(event.target.value)}
-        >
-          <option value="">Not rated</option>
-          {Array.from({ length: 5 }, (_, index) => (
-            <option key={index + 1} value={index + 1}>
-              {index + 1} {index === 0 ? "Star" : "Stars"}
-            </option>
-          ))}
-        </select>
+            <input
+              id="title"
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              placeholder="Enter game title..."
+              required
+            />
+          </div>
 
-        <label htmlFor="notes">Notes</label>
-        <textarea
-          id="notes"
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-          placeholder="Write your thoughts about the game..."
-          rows={4}
-        />
+          <div className="game-form__field">
+            <label htmlFor="platform">Platform</label>
 
-        {error && <p className="form-error">{error}</p>}
+            <select
+              id="platform"
+              value={platform}
+              onChange={(event) => setPlatform(event.target.value)}
+              required
+            >
+              <option value="">Choose platform</option>
+              <option value="PC">PC</option>
+              <option value="PlayStation 5">PlayStation 5</option>
+              <option value="Xbox">Xbox</option>
+              <option value="Switch">Nintendo Switch</option>
+            </select>
+          </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Saving..." : "Add Game"}
-        </button>
+          <div className="game-form__field">
+            <label htmlFor="status">Status</label>
+
+            <select
+              id="status"
+              value={status}
+              onChange={(event) => setStatus(event.target.value as GameStatus)}
+            >
+              <option value="want">Want to Play</option>
+              <option value="playing">Playing</option>
+              <option value="completed">Completed</option>
+              <option value="dropped">Dropped</option>
+            </select>
+          </div>
+
+          <div className="game-form__field">
+            <label htmlFor="rating">Rating</label>
+
+            <select
+              id="rating"
+              value={rating}
+              onChange={(event) => setRating(event.target.value)}
+            >
+              <option value="">Not rated</option>
+
+              {Array.from({ length: 5 }, (_, index) => (
+                <option key={index + 1} value={index + 1}>
+                  {"★".repeat(index + 1)} ({index + 1}/5)
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="game-form__field game-form__field--full">
+            <label htmlFor="notes">My Notes</label>
+
+            <textarea
+              id="notes"
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+              placeholder="Write your thoughts, memories and opinions about the game..."
+              rows={5}
+            />
+          </div>
+        </div>
+
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
+
+        <div className="game-form__footer">
+          <p>All fields except the notes are required.</p>
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Saving..." : "+ Add Game"}
+          </button>
+        </div>
       </form>
     </main>
   );

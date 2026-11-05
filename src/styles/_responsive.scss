@@ -8,6 +8,7 @@
     gap: 1.25rem;
   }
 
+  // Game Details
   .game-details__content {
     grid-template-columns: minmax(500px, 650px) minmax(0, 1fr);
     max-width: 1700px;
@@ -16,6 +17,23 @@
 
   .game-details__info h2 {
     font-size: 3rem;
+  }
+
+  // Dashboard
+  .dashboard {
+    padding: 3.5rem;
+
+    &__stats {
+      gap: 1.5rem;
+    }
+
+    &__recent-grid {
+      gap: 1.5rem;
+    }
+  }
+
+  .stat-card {
+    padding: 2rem;
   }
 }
 
@@ -27,6 +45,7 @@
     gap: 1.25rem;
   }
 
+  // Game Details
   .game-details__content {
     grid-template-columns: minmax(600px, 750px) minmax(0, 1fr);
     max-width: 1800px;
@@ -44,6 +63,19 @@
       font-size: 1.05rem;
     }
   }
+
+  // Dashboard
+  .dashboard {
+    padding: 4rem;
+
+    &__welcome {
+      min-height: 260px;
+    }
+
+    &__recent-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
 }
 
 // Ultra-wide desktop
@@ -53,6 +85,7 @@
     padding: 4rem;
   }
 
+  // Game Details
   .game-details__content {
     grid-template-columns: minmax(700px, 900px) minmax(0, 1fr);
     max-width: 2100px;
@@ -83,14 +116,25 @@
     width: 190px;
   }
 
+  // Dashboard
   .dashboard {
     padding: 2rem;
 
     &__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
+    }
+
+    &__recent-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &__legend {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
+  // Games
   .games__grid,
   .steam-library__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -103,6 +147,7 @@
 
 // Mobile and smaller tablets
 @media (max-width: 768px) {
+  // Header
   .header {
     height: 65px;
     padding: 0 1rem;
@@ -116,10 +161,12 @@
     }
   }
 
+  // Main layout
   .app__layout {
     flex-direction: column;
   }
 
+  // Sidebar
   .sidebar {
     width: 100%;
     padding: 0.75rem;
@@ -139,23 +186,48 @@
     }
   }
 
+  // Dashboard
   .dashboard {
     padding: 1.5rem;
 
-    &__welcome h2 {
-      font-size: 1.6rem;
+    &__welcome {
+      min-height: 190px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
     }
 
-    &__stats {
-      grid-template-columns: 1fr;
+    &__welcome-content h2 {
+      font-size: 1.75rem;
+    }
+
+    &__welcome-icon {
+      font-size: 4rem;
+    }
+
+    &__section-header h3 {
+      font-size: 1.2rem;
+    }
+
+    &__overview-card {
+      padding: 1.25rem;
+    }
+
+    &__recent-grid {
+      gap: 1rem;
     }
   }
 
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  // General page spacing
   .page,
   .steam-library {
     padding: 1.5rem;
   }
 
+  // Games
   .games__grid,
   .steam-library__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -186,6 +258,7 @@
     min-height: 44px;
   }
 
+  // Game Details
   .game-details {
     &__content {
       grid-template-columns: 1fr;
@@ -213,6 +286,7 @@
     }
   }
 
+  // Steam Library
   .steam-library__filters {
     flex-direction: column;
 
@@ -222,31 +296,90 @@
       min-width: 0;
     }
   }
+
+  // Add Game
+  .add-game__header {
+    margin-bottom: 2rem;
+  }
+
+  .game-form {
+    padding: 1.5rem;
+
+    &__grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    &__field--full {
+      grid-column: auto;
+    }
+  }
 }
 
 // Small mobile
 @media (max-width: 480px) {
+  // Header
   .header__profile {
     display: none;
   }
 
+  // Dashboard
   .dashboard {
     padding: 1rem;
 
-    &__welcome h2 {
-      font-size: 1.4rem;
+    &__welcome {
+      min-height: auto;
+      padding: 1.5rem;
+    }
+
+    &__welcome-content h2 {
+      font-size: 1.5rem;
+    }
+
+    &__welcome-content p {
+      font-size: 0.9rem;
+    }
+
+    &__welcome-icon {
+      font-size: 3rem;
+    }
+
+    &__stats,
+    &__recent-grid {
+      grid-template-columns: 1fr;
+    }
+
+    &__legend {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &__section-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    &__view-all {
+      align-self: flex-start;
+    }
+
+    &__overview-total {
+      align-items: flex-start;
+      flex-direction: column;
     }
   }
 
+  // General page spacing
   .page,
   .steam-library {
     padding: 1rem;
   }
 
+  // Statistics cards
   .stat-card {
     padding: 1.2rem;
   }
 
+  // Games
   .games__header {
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -262,8 +395,37 @@
     padding: 0.85rem;
   }
 
+  // Steam Library
   .steam-library__header h1 {
     font-size: 1.75rem;
+  }
+
+  // Add Game
+  .game-form {
+    padding: 1rem;
+
+    &__heading {
+      align-items: flex-start;
+
+      h3 {
+        font-size: 1.1rem;
+      }
+    }
+
+    &__icon {
+      width: 42px;
+      height: 42px;
+      font-size: 1.3rem;
+    }
+
+    &__footer {
+      flex-direction: column;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+      }
+    }
   }
 }
 
@@ -272,5 +434,19 @@
   .games__grid,
   .steam-library__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+// Extra small mobile
+@media (max-width: 360px) {
+  // Dashboard
+  .dashboard {
+    &__welcome-icon {
+      display: none;
+    }
+
+    &__legend {
+      grid-template-columns: 1fr;
+    }
   }
 }

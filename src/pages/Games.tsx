@@ -5,7 +5,8 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import { deleteAllGames } from "../services/gameService";
 import type { GameStatus } from "../types/Game";
 
-type SortOption = "title-asc" | "title-desc" | "rating-desc";
+type SortOption = "title-asc" | "title-desc" | "rating-desc" | "rating-asc";
+
 type StatusFilter = "all" | GameStatus;
 
 function Games() {
@@ -53,6 +54,11 @@ function Games() {
             if (a.rating === null) return 1;
             if (b.rating === null) return -1;
             return b.rating - a.rating;
+
+          case "rating-asc":
+            if (a.rating === null) return 1;
+            if (b.rating === null) return -1;
+            return a.rating - b.rating;
 
           default:
             return a.title.localeCompare(b.title);
@@ -197,7 +203,8 @@ function Games() {
               >
                 <option value="title-asc">Title (A-Z)</option>
                 <option value="title-desc">Title (Z-A)</option>
-                <option value="rating-desc">Highest rating</option>
+                <option value="rating-desc">Highest rating (5-1)</option>
+                <option value="rating-asc">Lowest rating (1-5)</option>
               </select>
             </div>
           </div>
