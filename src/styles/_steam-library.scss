@@ -175,3 +175,53 @@
     }
   }
 }
+
+.steam-library {
+  &__filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    input,
+    select {
+      padding: 0.85rem 1rem;
+      background: $color-surface;
+      color: $color-text;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      font: inherit;
+      outline: none;
+
+      &:focus {
+        border-color: $color-primary;
+      }
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    select {
+      min-width: 190px;
+      cursor: pointer;
+    }
+  }
+
+  &__results {
+    color: $color-muted;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__empty {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: $color-muted;
+
+    h3 {
+      color: $color-text;
+      margin-bottom: 0.5rem;
+    }
+  }
+}

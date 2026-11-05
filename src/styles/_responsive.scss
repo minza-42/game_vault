@@ -156,6 +156,17 @@
       }
     }
   }
+
+  /* Steam Library responsive filters */
+  .steam-library__filters {
+    flex-direction: column;
+
+    input,
+    select {
+      width: 100%;
+      min-width: 0;
+    }
+  }
 }
 
 // Small mobile
