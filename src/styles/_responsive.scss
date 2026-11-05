@@ -1,8 +1,10 @@
+
 @use "./variables" as *;
 
 // Large desktop
 @media (min-width: 1600px) {
-  .games__grid {
+  .games__grid,
+  .steam-library__grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1.25rem;
   }
@@ -10,7 +12,8 @@
 
 // Extra large desktop
 @media (min-width: 1920px) {
-  .games__grid {
+  .games__grid,
+  .steam-library__grid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 1.25rem;
   }
@@ -30,7 +33,8 @@
     }
   }
 
-  .games__grid {
+  .games__grid,
+  .steam-library__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -90,13 +94,20 @@
     }
   }
 
-  .page {
+  .page,
+  .steam-library {
     padding: 1.5rem;
   }
 
-  .games__grid {
+  .games__grid,
+  .steam-library__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
+  }
+
+  .steam-library__header {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   // Stack filters vertically on mobile
@@ -161,7 +172,8 @@
     }
   }
 
-  .page {
+  .page,
+  .steam-library {
     padding: 1rem;
   }
 
@@ -177,11 +189,16 @@
   .games__filters {
     padding: 0.85rem;
   }
+
+  .steam-library__header h1 {
+    font-size: 1.75rem;
+  }
 }
 
 // Very small mobile
 @media (max-width: 420px) {
-  .games__grid {
+  .games__grid,
+  .steam-library__grid {
     grid-template-columns: 1fr;
   }
 }

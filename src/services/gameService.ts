@@ -21,6 +21,7 @@ export interface NewGame {
   platform: string;
   status: GameStatus;
   rating?: number | null;
+  coverUrl?: string;
   notes?: string;
   steamAppId?: number;
   steamPlaytime?: number;
