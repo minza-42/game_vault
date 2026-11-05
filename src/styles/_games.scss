@@ -1,3 +1,4 @@
+
 @use "./variables" as *;
 
 // Main page
@@ -112,10 +113,12 @@
     outline-offset: 3px;
   }
 
+  // Game image
   &__image {
     position: relative;
     aspect-ratio: 3 / 4;
     overflow: hidden;
+    background: #202938;
 
     img {
       width: 100%;
@@ -123,8 +126,18 @@
       object-fit: cover;
       display: block;
     }
+
+    // Steam header images
+    &--steam {
+      aspect-ratio: 460 / 215;
+
+      img {
+        object-fit: contain;
+      }
+    }
   }
 
+  // Game status
   &__status {
     position: absolute;
     bottom: 0.75rem;
@@ -152,6 +165,7 @@
     }
   }
 
+  // Game information
   &__content {
     padding: 1rem;
 

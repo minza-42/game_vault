@@ -12,9 +12,13 @@
 
 // Extra large desktop
 @media (min-width: 1920px) {
-  .games__grid,
+  .games__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
   .steam-library__grid {
-    grid-template-columns: repeat(9, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 1.25rem;
   }
 }
