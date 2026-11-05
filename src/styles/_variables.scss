@@ -1,8 +1,45 @@
-$color-background: #0d1117;
-$color-surface: #161b22;
+
+// =========================================
+// GameVault - Design tokens
+// =========================================
+
+// Backgrounds
+$color-background: #0a0e17;
+$color-surface: #111827;
+$color-surface-hover: #192337;
+$color-card: #151e2e;
+
+// Brand colors
 $color-primary: #8b5cf6;
+$color-primary-hover: #a78bfa;
 $color-secondary: #38bdf8;
+
+// Text
 $color-text: #f1f5f9;
 $color-muted: #94a3b8;
+$color-subtle: #64748b;
 
-$border-color: #30363d;
+// Borders
+$border-color: #263247;
+$border-color-hover: #3b4b65;
+
+// Status colors
+$color-success: #4ade80;
+$color-warning: #fbbf24;
+$color-danger: #f87171;
+
+// Effects
+$shadow-card: 0 8px 24px rgba(0, 0, 0, 0.2);
+$shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.3);
+
+$glow-primary: 0 0 20px rgba(139, 92, 246, 0.15);
+$glow-secondary: 0 0 20px rgba(56, 189, 248, 0.12);
+
+// Border radius
+$radius-small: 8px;
+$radius-medium: 12px;
+$radius-large: 16px;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
