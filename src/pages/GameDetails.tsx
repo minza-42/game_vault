@@ -16,6 +16,7 @@ function GameDetails() {
   const { removeGame, loading: deleting, error: deleteError } = useDeleteGame();
 
   const [editing, setEditing] = useState(false);
+  const [platform, setPlatform] = useState("");
   const [status, setStatus] = useState<GameStatus>("want");
   const [rating, setRating] = useState<number | null>(null);
   const [notes, setNotes] = useState("");
@@ -29,9 +30,9 @@ function GameDetails() {
     return <main className="page">Error: {error}</main>;
   }
 
-  const game = games.find((game) => game.id === id);
+  const selectedGame = games.find((item) => item.id === id);
 
-  if (!game) {
+  if (!selectedGame) {
     return (
       <main className="page">
         <h2>Game not found</h2>
@@ -41,11 +42,10 @@ function GameDetails() {
   }
 
   function startEditing() {
-    if (!game) return;
-
-    setStatus(game.status);
-    setRating(game.rating);
-    setNotes(game.notes || "");
+    setPlatform(selectedGame!.platform);
+    setStatus(selectedGame!.status);
+    setRating(selectedGame!.rating);
+    setNotes(selectedGame!.notes || "");
     setEditing(true);
   }
 
@@ -53,7 +53,13 @@ function GameDetails() {
     if (!id) return;
 
     try {
-      await saveChanges(id, { status, rating, notes });
+      await saveChanges(id, {
+        platform,
+        status,
+        rating,
+        notes,
+      });
+
       setEditing(false);
       window.location.reload();
     } catch {
@@ -62,13 +68,11 @@ function GameDetails() {
   }
 
   async function handleDelete() {
-    if (!id || !game) return;
-
     const confirmed = window.confirm(
-      `Are you sure you want to delete ${game.title}?`,
+      `Are you sure you want to delete ${selectedGame!.title}?`,
     );
 
-    if (!confirmed) return;
+    if (!confirmed || !id) return;
 
     try {
       await removeGame(id);
@@ -86,7 +90,7 @@ function GameDetails() {
 
       <div className="game-details__content">
         <div className="game-details__cover-wrapper">
-          {imageError ? (
+          {imageError || !selectedGame.coverUrl ? (
             <div className="game-details__cover-fallback">
               🎮
               <span>No cover available</span>
@@ -94,8 +98,8 @@ function GameDetails() {
           ) : (
             <img
               className="game-details__cover"
-              src={game.coverUrl}
-              alt={`${game.title} cover`}
+              src={selectedGame.coverUrl}
+              alt={`${selectedGame.title} cover`}
               onError={() => setImageError(true)}
             />
           )}
@@ -103,18 +107,30 @@ function GameDetails() {
 
         <div className="game-details__info">
           <span
-            className={`game-details__status game-details__status--${game.status}`}
+            className={`game-details__status game-details__status--${selectedGame.status}`}
           >
-            {game.status}
+            {selectedGame.status}
           </span>
 
-          <h2>{game.title}</h2>
+          <h2>{selectedGame.title}</h2>
 
-          <p className="game-details__platform">{game.platform}</p>
+          <p className="game-details__platform">{selectedGame.platform}</p>
 
           {editing ? (
             <div className="game-details__edit">
               <h3>Edit Game</h3>
+
+              <label htmlFor="game-platform">Platform</label>
+              <select
+                id="game-platform"
+                value={platform}
+                onChange={(event) => setPlatform(event.target.value)}
+              >
+                <option value="PC">PC</option>
+                <option value="PlayStation 5">PlayStation 5</option>
+                <option value="Xbox">Xbox</option>
+                <option value="Switch">Switch</option>
+              </select>
 
               <label htmlFor="game-status">Status</label>
               <select
@@ -179,15 +195,16 @@ function GameDetails() {
               <div className="game-details__rating">
                 <span className="game-details__label">My Rating</span>
                 <p>
-                  {game.rating !== null
-                    ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
+                  {selectedGame.rating !== null
+                    ? "★".repeat(selectedGame.rating) +
+                      "☆".repeat(5 - selectedGame.rating)
                     : "Not rated"}
                 </p>
               </div>
 
               <div className="game-details__notes">
                 <h3>My Notes</h3>
-                <p>{game.notes || "No notes yet."}</p>
+                <p>{selectedGame.notes || "No notes yet."}</p>
               </div>
 
               <button

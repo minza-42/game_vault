@@ -27,27 +27,16 @@ export interface NewGame {
   steamPlaytime?: number;
 }
 
-export async function createGame(game: NewGame): Promise<Game> {
-  const response = await fetch(`${BASE_URL}/games`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(game),
-  });
-
-  if (!response.ok) {
-    throw new Error("Could not create game");
-  }
-
-  return response.json();
-}
-
 // PATCH - Update an existing game
-interface UpdateGame {
+export interface UpdateGame {
+  title?: string;
+  platform?: string;
   status?: GameStatus;
   rating?: number | null;
   notes?: string;
+  coverUrl?: string;
+  steamAppId?: number;
+  steamPlaytime?: number;
 }
 
 export async function updateGame(
@@ -64,6 +53,23 @@ export async function updateGame(
 
   if (!response.ok) {
     throw new Error("Could not update game");
+  }
+
+  return response.json();
+}
+
+// POST - Create a new game
+export async function createGame(game: NewGame): Promise<Game> {
+  const response = await fetch(`${BASE_URL}/games`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(game),
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not create game");
   }
 
   return response.json();

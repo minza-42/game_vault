@@ -1,18 +1,13 @@
 import { useState } from "react";
 import { updateGame } from "../services/gameService";
-import type { Game, GameStatus } from "../types/Game";
-
-interface GameUpdates {
-  status?: GameStatus;
-  rating?: number | null;
-  notes?: string;
-}
+import type { Game } from "../types/Game";
+import type { UpdateGame } from "../services/gameService";
 
 function useUpdateGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function saveChanges(id: string, updates: GameUpdates): Promise<Game> {
+  async function saveChanges(id: string, updates: UpdateGame): Promise<Game> {
     try {
       setLoading(true);
       setError(null);
@@ -22,7 +17,7 @@ function useUpdateGame() {
       return updatedGame;
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Could not update game";
+        err instanceof Error ? err.message : "Something went wrong";
 
       setError(message);
       throw err;
