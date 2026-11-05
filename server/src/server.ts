@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { getAllSteamGames, getSteamGame, saveSteamGame } from "./database";
 
 dotenv.config();
 
@@ -20,6 +21,20 @@ app.get("/", (_req, res) => {
   res.json({
     message: "GameVault Steam backend is running!",
   });
+});
+
+// Get all saved Steam metadata
+app.get("/api/steam/metadata", (_req, res) => {
+  try {
+    const games = getAllSteamGames();
+    res.json(games);
+  } catch (error) {
+    console.error("Database error:", error);
+
+    res.status(500).json({
+      error: "Could not fetch Steam metadata.",
+    });
+  }
 });
 
 // Get Steam library
@@ -58,6 +73,62 @@ app.get("/api/steam/games", async (_req, res) => {
 
     res.status(500).json({
       error: "Could not fetch Steam games.",
+    });
+  }
+});
+
+// Get saved Steam metadata for one game
+app.get("/api/steam/metadata/:appId", (req, res) => {
+  const appId = Number(req.params.appId);
+
+  if (!Number.isInteger(appId) || appId <= 0) {
+    res.status(400).json({
+      error: "Invalid Steam App ID.",
+    });
+    return;
+  }
+
+  try {
+    const game = getSteamGame(appId);
+    res.json(game ?? null);
+  } catch (error) {
+    console.error("Database error:", error);
+
+    res.status(500).json({
+      error: "Could not fetch Steam metadata.",
+    });
+  }
+});
+
+// Save or update Steam metadata
+app.put("/api/steam/metadata", (req, res) => {
+  const { appId, questlogGameId, playtimeMinutes } = req.body;
+
+  if (
+    !Number.isInteger(appId) ||
+    appId <= 0 ||
+    typeof questlogGameId !== "string" ||
+    !questlogGameId.trim() ||
+    !Number.isInteger(playtimeMinutes) ||
+    playtimeMinutes < 0
+  ) {
+    res.status(400).json({
+      error: "Invalid Steam metadata.",
+    });
+    return;
+  }
+
+  try {
+    saveSteamGame(appId, questlogGameId, playtimeMinutes);
+
+    res.json({
+      message: "Steam metadata saved successfully.",
+    });
+  } catch (error) {
+    console.error("Database error:", error);
+
+    res.status(500).json({
+      error: "Could not save Steam metadata.",
     });
   }
 });

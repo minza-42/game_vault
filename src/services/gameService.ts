@@ -52,7 +52,17 @@ export async function updateGame(
   });
 
   if (!response.ok) {
-    throw new Error("Could not update game");
+    const errorDetails = await response.text();
+
+    console.error("PATCH error:", {
+      status: response.status,
+      details: errorDetails,
+      updates,
+    });
+
+    throw new Error(
+      `Could not update game (${response.status}): ${errorDetails}`,
+    );
   }
 
   return response.json();

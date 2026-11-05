@@ -3,6 +3,10 @@ import { getSteamGames } from "../services/steamService";
 import type { SteamGame } from "../services/steamService";
 import { createGame } from "../services/gameService";
 import useGames from "../hooks/useGames";
+import {
+  getAllSteamMetadata,
+  saveSteamMetadata,
+} from "../services/steamMetadataService";
 
 type SortOption = "playtime-desc" | "playtime-asc" | "title-asc" | "title-desc";
 
@@ -12,8 +16,15 @@ function SteamLibrary() {
   const [error, setError] = useState("");
   const [importingId, setImportingId] = useState<number | null>(null);
 
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState("");
+
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("playtime-desc");
+
+  const [steamMetadata, setSteamMetadata] = useState<
+    Awaited<ReturnType<typeof getAllSteamMetadata>>
+  >([]);
 
   const {
     games: myGames,
@@ -21,11 +32,18 @@ function SteamLibrary() {
     error: myGamesError,
   } = useGames();
 
+  // Load Steam library and saved metadata.
+  // This does not import any games.
   useEffect(() => {
     async function loadGames() {
       try {
-        const data = await getSteamGames();
-        setSteamGames(data);
+        const [steamData, metadata] = await Promise.all([
+          getSteamGames(),
+          getAllSteamMetadata(),
+        ]);
+
+        setSteamGames(steamData);
+        setSteamMetadata(metadata);
       } catch (error) {
         console.error(error);
         setError("Could not load your Steam library.");
@@ -47,55 +65,145 @@ function SteamLibrary() {
         switch (sortBy) {
           case "playtime-desc":
             return b.playtime_forever - a.playtime_forever;
-
           case "playtime-asc":
             return a.playtime_forever - b.playtime_forever;
-
           case "title-asc":
             return a.name.localeCompare(b.name);
-
           case "title-desc":
             return b.name.localeCompare(a.name);
-
           default:
             return 0;
         }
       });
   }, [steamGames, search, sortBy]);
 
-  async function importGame(game: SteamGame) {
-    const alreadyImported = myGames.some(
-      (myGame) =>
-        myGame.steamAppId === game.appid ||
-        myGame.title.toLowerCase() === game.name.toLowerCase(),
-    );
+  // Find a game already connected to Steam metadata
+  function findMetadata(appId: number) {
+    return steamMetadata.find((metadata) => metadata.steam_app_id === appId);
+  }
 
-    if (alreadyImported) {
-      alert(`${game.name} is already in My Games!`);
+  // Check whether a Steam game is already in My Games
+  function findExistingGame(steamGame: SteamGame) {
+    const metadata = findMetadata(steamGame.appid);
+
+    if (metadata?.questlog_game_id) {
+      const linkedGame = myGames.find(
+        (game) => game.id === metadata.questlog_game_id,
+      );
+
+      if (linkedGame) {
+        return linkedGame;
+      }
+    }
+
+    return myGames.find(
+      (game) =>
+        game.title.trim().toLowerCase() === steamGame.name.trim().toLowerCase(),
+    );
+  }
+
+  // Import one game manually
+  async function importGame(steamGame: SteamGame) {
+    const existingGame = findExistingGame(steamGame);
+
+    if (existingGame) {
+      alert(`${steamGame.name} is already in My Games!`);
       return;
     }
 
     try {
-      setImportingId(game.appid);
+      setImportingId(steamGame.appid);
 
-      await createGame({
-        title: game.name,
+      const createdGame = await createGame({
+        title: steamGame.name,
         platform: "PC",
         status: "want",
         rating: null,
-        coverUrl: `https://cdn.akamai.steamstatic.com/steam/apps/${game.appid}/header.jpg`,
+        coverUrl: `https://cdn.akamai.steamstatic.com/steam/apps/${steamGame.appid}/header.jpg`,
         notes: "",
-        steamAppId: game.appid,
-        steamPlaytime: game.playtime_forever,
       });
 
-      alert(`${game.name} was imported!`);
+      await saveSteamMetadata(
+        steamGame.appid,
+        createdGame.id,
+        steamGame.playtime_forever,
+      );
+
+      const metadata = await getAllSteamMetadata();
+      setSteamMetadata(metadata);
+
+      alert(`${steamGame.name} was imported!`);
+
+      // Reload to refresh My Games with the newly imported game
       window.location.reload();
     } catch (error) {
       console.error("Import failed:", error);
-      alert("Could not import the game.");
+      alert(
+        "Could not complete the import. Please check your backend and try again.",
+      );
     } finally {
       setImportingId(null);
+    }
+  }
+
+  // Synchronize only when the user clicks the Sync button
+  async function syncSteamLibrary() {
+    if (syncing || importingId !== null) return;
+
+    try {
+      setSyncing(true);
+      setSyncMessage("");
+
+      const latestSteamGames = await getSteamGames();
+      const latestMyGames = myGames;
+
+      let importedCount = 0;
+      let updatedCount = 0;
+
+      for (const steamGame of latestSteamGames) {
+        let existingGame = findExistingGame(steamGame);
+
+        if (!existingGame) {
+          existingGame = await createGame({
+            title: steamGame.name,
+            platform: "PC",
+            status: "want",
+            rating: null,
+            coverUrl: `https://cdn.akamai.steamstatic.com/steam/apps/${steamGame.appid}/header.jpg`,
+            notes: "",
+          });
+
+          latestMyGames.push(existingGame);
+          importedCount++;
+        } else {
+          updatedCount++;
+        }
+
+        // Only Steam metadata is updated here.
+        // Questlog game information is left untouched.
+        await saveSteamMetadata(
+          steamGame.appid,
+          existingGame.id,
+          steamGame.playtime_forever,
+        );
+      }
+
+      setSteamGames(latestSteamGames);
+
+      const metadata = await getAllSteamMetadata();
+      setSteamMetadata(metadata);
+
+      setSyncMessage(
+        `Sync complete! ${importedCount} new games imported and ${updatedCount} existing games matched.`,
+      );
+    } catch (error) {
+      console.error("Steam sync failed:", error);
+
+      const message = error instanceof Error ? error.message : "Unknown error";
+
+      setSyncMessage(`Sync failed: ${message}`);
+    } finally {
+      setSyncing(false);
     }
   }
 
@@ -117,6 +225,17 @@ function SteamLibrary() {
 
         <span>{steamGames.length} games found</span>
       </header>
+
+      <div className="steam-library__sync">
+        <button
+          onClick={syncSteamLibrary}
+          disabled={syncing || importingId !== null}
+        >
+          {syncing ? "Syncing..." : "Sync Steam"}
+        </button>
+
+        {syncMessage && <p>{syncMessage}</p>}
+      </div>
 
       <div className="steam-library__filters">
         <input
@@ -151,11 +270,7 @@ function SteamLibrary() {
       ) : (
         <div className="steam-library__grid">
           {filteredGames.map((game) => {
-            const alreadyImported = myGames.some(
-              (myGame) =>
-                myGame.steamAppId === game.appid ||
-                myGame.title.toLowerCase() === game.name.toLowerCase(),
-            );
+            const alreadyImported = Boolean(findExistingGame(game));
 
             return (
               <article className="steam-card" key={game.appid}>
@@ -194,7 +309,7 @@ function SteamLibrary() {
                   ) : (
                     <button
                       onClick={() => importGame(game)}
-                      disabled={importingId !== null}
+                      disabled={importingId === game.appid || syncing}
                     >
                       {importingId === game.appid
                         ? "Importing..."

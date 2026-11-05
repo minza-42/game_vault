@@ -30,3 +30,8 @@ dist-ssr
 
 # Never commit the Steam API key
 server/.env
+
+# Local SQLite database
+server/*.sqlite
+server/*.sqlite-shm
+server/*.sqlite-wal
