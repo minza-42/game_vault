@@ -95,3 +95,12 @@ export async function deleteGame(id: string): Promise<void> {
     throw new Error("Could not delete game");
   }
 }
+
+// Delete all games from Questlog
+export async function deleteAllGames(): Promise<void> {
+  const games = await getGames();
+
+  for (const game of games) {
+    await deleteGame(game.id);
+  }
+}

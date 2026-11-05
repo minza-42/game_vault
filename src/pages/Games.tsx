@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { deleteAllGames } from "../services/gameService";
 import type { GameStatus } from "../types/Game";
 
 type SortOption = "title-asc" | "title-desc" | "rating-desc";
@@ -9,6 +10,9 @@ type StatusFilter = "all" | GameStatus;
 
 function Games() {
   const { games, loading, error } = useGames();
+
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   // Filter states saved in LocalStorage
   const [search, setSearch] = useLocalStorage("games-search", "");
@@ -64,6 +68,36 @@ function Games() {
     setSortBy("title-asc");
   }
 
+  // Delete all games from My Games
+  async function handleDeleteAllGames() {
+    if (games.length === 0 || deleting) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete all ${games.length} games from My Games?\n\nYour Steam library and saved Steam connections will remain untouched.\n\nThis action cannot be undone.`,
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      setDeleteError("");
+
+      await deleteAllGames();
+
+      alert("All games have been deleted from My Games.");
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Could not delete all games:", error);
+
+      setDeleteError(
+        error instanceof Error ? error.message : "Could not delete all games.",
+      );
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   if (loading) {
     return <main className="page">Loading games...</main>;
   }
@@ -80,10 +114,29 @@ function Games() {
           <p>Your personal gaming library.</p>
         </div>
 
-        <span>
-          {filteredGames.length} / {games.length} Games
-        </span>
+        <div className="games__header-actions">
+          <span>
+            {filteredGames.length} / {games.length} Games
+          </span>
+
+          {games.length > 0 && (
+            <button
+              className="games__delete-all"
+              onClick={handleDeleteAllGames}
+              type="button"
+              disabled={deleting}
+            >
+              {deleting ? "Deleting..." : "Delete All Games"}
+            </button>
+          )}
+        </div>
       </div>
+
+      {deleteError && (
+        <p role="alert" className="games__delete-error">
+          {deleteError}
+        </p>
+      )}
 
       {games.length > 0 && (
         <section className="games__filters">
