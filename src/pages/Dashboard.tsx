@@ -1,8 +1,35 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
+import { getAllSteamMetadata } from "../services/steamMetadataService";
+import type { SteamMetadata } from "../services/steamMetadataService";
 
 function Dashboard() {
   const { games, loading, error } = useGames();
+  const [steamMetadata, setSteamMetadata] = useState<SteamMetadata[]>([]);
+
+  // Fetch Steam playtime metadata
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchSteamMetadata() {
+      try {
+        const metadata = await getAllSteamMetadata();
+
+        if (isMounted) {
+          setSteamMetadata(metadata);
+        }
+      } catch (error) {
+        console.error("Could not fetch Steam metadata:", error);
+      }
+    }
+
+    fetchSteamMetadata();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const totalGames = games.length;
 
@@ -25,6 +52,20 @@ function Dashboard() {
           ratedGames.length
         ).toFixed(1)
       : "N/A";
+
+  // Calculate total Steam playtime
+  const totalPlaytimeMinutes = steamMetadata.reduce(
+    (total, game) => total + game.playtime_minutes,
+    0,
+  );
+
+  const totalPlaytimeHours = (totalPlaytimeMinutes / 60).toLocaleString(
+    "en-US",
+    {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    },
+  );
 
   // Get the four most recently added games
   const recentlyAdded = [...games]
@@ -83,6 +124,12 @@ function Dashboard() {
       icon: "★",
       color: "yellow",
     },
+    {
+      title: "Total Playtime",
+      value: `${totalPlaytimeHours} hrs`,
+      icon: "⏱️",
+      color: "blue",
+    },
   ];
 
   const statusItems = [
@@ -113,12 +160,13 @@ function Dashboard() {
       {/* Welcome section */}
       <section className="dashboard__welcome">
         <div className="dashboard__welcome-content">
-          <span className="dashboard__eyebrow">YOUR PERSONAL GAMING HUB</span>
+          <span className="dashboard__eyebrow">YOUR GAMING SPACE</span>
 
           <h2>Welcome to GameVault</h2>
 
           <p>
-            Your games, your progress, your collection. Everything in one place.
+            Keep track of your games, discover your next adventure, and follow
+            your gaming journey, all in one place.
           </p>
 
           <Link to="/games" className="dashboard__welcome-button">

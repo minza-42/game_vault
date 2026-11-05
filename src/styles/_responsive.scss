@@ -24,6 +24,7 @@
     padding: 3.5rem;
 
     &__stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1.5rem;
     }
 
