@@ -125,11 +125,16 @@ function GameDetails() {
                 id="game-platform"
                 value={platform}
                 onChange={(event) => setPlatform(event.target.value)}
+                required
               >
+                <option value="" disabled>
+                  Choose platform
+                </option>
                 <option value="PC">PC</option>
-                <option value="PlayStation 5">PlayStation 5</option>
+                <option value="VR">VR</option>
                 <option value="Xbox">Xbox</option>
-                <option value="Switch">Switch</option>
+                <option value="PlayStation 5">PlayStation 5</option>
+                <option value="Switch">Nintendo Switch</option>
               </select>
 
               <label htmlFor="game-status">Status</label>

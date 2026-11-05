@@ -11,6 +11,8 @@ function AddGame() {
   const [platform, setPlatform] = useState("");
   const [status, setStatus] = useState<GameStatus>("want");
   const [rating, setRating] = useState("");
+  const [coverUrl, setCoverUrl] = useState("");
+  const [imageError, setImageError] = useState(false);
   const [notes, setNotes] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -22,6 +24,7 @@ function AddGame() {
         platform,
         status,
         rating: rating === "" ? null : Number(rating),
+        coverUrl: coverUrl.trim(),
         notes,
       });
 
@@ -80,10 +83,46 @@ function AddGame() {
             >
               <option value="">Choose platform</option>
               <option value="PC">PC</option>
-              <option value="PlayStation 5">PlayStation 5</option>
+              <option value="VR">VR</option>
               <option value="Xbox">Xbox</option>
+              <option value="PlayStation 5">PlayStation</option>
               <option value="Switch">Nintendo Switch</option>
             </select>
+          </div>
+
+          <div className="game-form__field game-form__field--full">
+            <label htmlFor="coverUrl">Game Cover (Optional)</label>
+
+            <input
+              id="coverUrl"
+              type="url"
+              value={coverUrl}
+              onChange={(event) => {
+                setCoverUrl(event.target.value);
+                setImageError(false);
+              }}
+              placeholder="Paste an image URL..."
+            />
+
+            <p className="game-form__hint">
+              Add a link to the game's cover image.
+            </p>
+
+            {coverUrl.trim() && (
+              <div className="game-form__preview">
+                {imageError ? (
+                  <p className="game-form__preview-error" role="alert">
+                    Could not load this image. Check the URL and try again.
+                  </p>
+                ) : (
+                  <img
+                    src={coverUrl.trim()}
+                    alt={title ? `${title} cover` : "Game cover preview"}
+                    onError={() => setImageError(true)}
+                  />
+                )}
+              </div>
+            )}
           </div>
 
           <div className="game-form__field">
@@ -139,7 +178,7 @@ function AddGame() {
         )}
 
         <div className="game-form__footer">
-          <p>All fields except the notes are required.</p>
+          <p>Only the game title and platform are required.</p>
 
           <button type="submit" disabled={loading}>
             {loading ? "Saving..." : "+ Add Game"}
