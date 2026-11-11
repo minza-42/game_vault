@@ -16,6 +16,7 @@ function GameDetails() {
   const { removeGame, loading: deleting, error: deleteError } = useDeleteGame();
 
   const [editing, setEditing] = useState(false);
+  const [title, setTitle] = useState("");
   const [platform, setPlatform] = useState("");
   const [status, setStatus] = useState<GameStatus>("want");
   const [rating, setRating] = useState<number | null>(null);
@@ -48,6 +49,7 @@ function GameDetails() {
   function startEditing() {
     if (!selectedGame) return;
 
+    setTitle(selectedGame.title);
     setPlatform(selectedGame.platform);
     setStatus(selectedGame.status);
     setRating(selectedGame.rating);
@@ -62,10 +64,11 @@ function GameDetails() {
   }
 
   async function handleSave() {
-    if (!id) return;
+    if (!id || !title.trim()) return;
 
     try {
       await saveChanges(id, {
+        title: title.trim(),
         platform,
         status,
         rating,
@@ -140,6 +143,16 @@ function GameDetails() {
           {editing ? (
             <div className="game-details__edit">
               <h3>Edit Game</h3>
+
+              <label htmlFor="game-title">Game Title</label>
+              <input
+                id="game-title"
+                type="text"
+                placeholder="Enter game title"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                required
+              />
 
               <label htmlFor="game-cover">Cover Image URL</label>
 
@@ -254,7 +267,7 @@ function GameDetails() {
               {saveError && <p className="form-error">{saveError}</p>}
 
               <div className="game-details__actions">
-                <button onClick={handleSave} disabled={saving}>
+                <button onClick={handleSave} disabled={saving || !title.trim()}>
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
 

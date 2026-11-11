@@ -52,10 +52,6 @@ function AddGame() {
             <h3>Game Information</h3>
             <p>Enter the details of your new game.</p>
           </div>
-
-          <span className="game-form__icon" aria-hidden="true">
-            🎮
-          </span>
         </div>
 
         <div className="game-form__grid">

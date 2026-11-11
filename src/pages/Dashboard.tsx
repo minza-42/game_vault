@@ -6,9 +6,11 @@ function Dashboard() {
 
   const totalGames = games.length;
 
-  const currentlyPlaying = games.filter(
+  const currentlyPlayingGames = games.filter(
     (game) => game.status === "playing",
-  ).length;
+  );
+
+  const currentlyPlaying = currentlyPlayingGames.length;
 
   const completed = games.filter((game) => game.status === "completed").length;
 
@@ -198,6 +200,56 @@ function Dashboard() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Currently Playing */}
+      <section className="dashboard__recent">
+        <div className="dashboard__section-header">
+          <div>
+            <h3>Currently Playing</h3>
+            <p>Games you're currently playing.</p>
+          </div>
+
+          <Link to="/games" className="dashboard__view-all">
+            View all games →
+          </Link>
+        </div>
+
+        {currentlyPlayingGames.length === 0 ? (
+          <div className="dashboard__empty">
+            <span>🕹️</span>
+            <p>You're not playing any games right now.</p>
+            <Link to="/games">Explore your games →</Link>
+          </div>
+        ) : (
+          <div className="dashboard__recent-grid">
+            {currentlyPlayingGames.map((game) => (
+              <Link
+                to={`/games/${game.id}`}
+                className="dashboard__game-card"
+                key={game.id}
+              >
+                <div className="dashboard__game-image">
+                  <img src={game.coverUrl} alt={`${game.title} cover`} />
+                </div>
+
+                <div className="dashboard__game-info">
+                  <h4>{game.title}</h4>
+
+                  <span className="dashboard__game-status dashboard__game-status--playing">
+                    Playing
+                  </span>
+
+                  <div className="dashboard__game-rating">
+                    {game.rating !== null
+                      ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
+                      : "Not rated"}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Recently added games */}
