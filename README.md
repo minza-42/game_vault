@@ -4,11 +4,11 @@
 
 GameVault är en webbapplikation byggd med React och TypeScript där du kan organisera och hålla koll på din egen spelsamling.
 
-Jag har alltid älskat att spela spel, och gaming är en av mina största fritidsintressen. Jag ville därför skapa ett projekt som kombinerar mitt personliga intresse för spel med det jag lär mig inom frontendutveckling.
+Jag har alltid älskat att spela spel, och gaming är ett av mina största fritidsintressen. Jag ville därför skapa ett projekt som kombinerar mitt personliga intresse för spel med det jag lär mig inom frontendutveckling.
 
 Med GameVault kan jag samla mina spel på ett ställe, hålla koll på vad jag spelar just nu, vilka spel jag har klarat och vilka äventyr som väntar härnäst.
 
-**Live Demo:** https://game-vault-rose.vercel.app/
+**Live Demo:** [GameVault](https://game-vault-rose.vercel.app/)
 
 ---
 
@@ -17,7 +17,7 @@ Med GameVault kan jag samla mina spel på ett ställe, hålla koll på vad jag s
 - **Dashboard** – Få en överblick över din spelsamling med statistik och senast tillagda spel.
 - **Spelbibliotek** – Visa och hantera alla dina spel på ett och samma ställe.
 - **Lägg till spel** – Lägg till spel med titel, plattform, status, betyg, anteckningar och omslagsbild.
-- **Redigera spel** – Uppdatera spelinformation, inklusive omslagsbilder.
+- **Redigera spel** – Uppdatera spelinformation, inklusive titel och omslagsbilder.
 - **Ta bort spel** – Ta bort enskilda spel eller hela spelsamlingen.
 - **Speldetaljer** – Se mer information om varje spel.
 - **Statusfilter** – Filtrera spel efter aktuell status.
@@ -66,17 +66,18 @@ Följande HTTP-metoder används:
 - **PATCH** – Uppdatera befintliga spel.
 - **DELETE** – Ta bort spel.
 
-API-dokumentation: https://questlog-api.vercel.app/docs
+API-dokumentation: [Questlog API](https://questlog-api.vercel.app/docs)
 
 ## 🧩 Custom Hooks
 
-För att hålla koden organiserad och separera API-logiken från komponenterna använder GameVault egna React Hooks.
+För att hålla koden organiserad och separera återanvändbar logik och API-anrop från komponenterna använder GameVault egna React Hooks.
 
 - `useGames` – Hämtar och hanterar spelsamlingen, inklusive laddnings- och felhantering.
 - `useUpdateGame` – Hanterar uppdatering av spelinformation.
 - `useDeleteGame` – Hanterar borttagning av spel.
+- `useLocalStorage` – Sparar och hämtar värden från webbläsarens LocalStorage. Används för att behålla sökning, statusfilter, plattformsfilter och sortering även efter att sidan laddats om.
 
-Genom att använda egna hooks blir koden mer återanvändbar och lättare att underhålla. Det gör också att komponenterna kan fokusera mer på presentation och användarinteraktion.
+Genom att använda egna hooks kan jag återanvända logik och hålla komponenterna enklare. Det gör också att komponenterna kan fokusera mer på presentation och användarinteraktion istället för att hantera all logik själva.
 
 ## 🎨 Design och utvecklingsbeslut
 
@@ -147,11 +148,17 @@ game_vault/
 │   │   └── main.tsx
 │   ├── index.html
 │   └── package.json
-├── README.md
+└── README.md
 ```
 
 ## 🌐 Publicering
 
 GameVault är publicerad med Vercel.
 
-**Webbplats:** https://game-vault-rose.vercel.app/
+**Webbplats:** [Game Vault](https://game-vault-rose.vercel.app/)
+
+**GitHub:** [game_vault repo](https://github.com/minza-42/game_vault)
+
+---
+
+**Målsättning: VG**

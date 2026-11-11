@@ -229,13 +229,7 @@ function Games() {
         <div className="games__grid">
           {filteredGames.map((game) => (
             <Link to={`/games/${game.id}`} className="game-card" key={game.id}>
-              <div
-                className={`game-card__image ${
-                  game.coverUrl?.includes("steamstatic.com/steam/apps/")
-                    ? "game-card__image--steam"
-                    : ""
-                }`}
-              >
+              <div className="game-card__image">
                 <img src={game.coverUrl} alt={`${game.title} cover`} />
 
                 <span

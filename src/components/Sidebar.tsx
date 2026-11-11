@@ -8,9 +8,13 @@ function Sidebar() {
           Dashboard
         </NavLink>
 
-        <NavLink to="/games">My Games</NavLink>
+        <NavLink to="/games" end>
+          My Games
+        </NavLink>
 
-        <NavLink to="/games/add">Add Game</NavLink>
+        <NavLink to="/games/add" end>
+          Add Game
+        </NavLink>
       </nav>
     </aside>
   );

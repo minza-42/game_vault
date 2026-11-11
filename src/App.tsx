@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import Footer from "./components/Footer";
 
 import Dashboard from "./pages/Dashboard";
 import Games from "./pages/Games";
@@ -26,6 +27,8 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+
+        <Footer />
       </div>
     </BrowserRouter>
   );

@@ -1,0 +1,75 @@
+@use "./variables" as *;
+
+.footer {
+  width: 100%;
+  background: $color-surface;
+  border-top: 1px solid $border-color;
+  margin-top: auto;
+
+  &__content {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem;
+  }
+
+  &__brand {
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $color-text;
+      margin-bottom: 0.4rem;
+    }
+
+    p {
+      color: $color-muted;
+      font-size: 0.9rem;
+      max-width: 400px;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid $border-color;
+
+    span {
+      color: $color-subtle;
+      font-size: 0.85rem;
+    }
+
+    a {
+      color: $color-muted;
+      font-size: 0.9rem;
+      transition: color $transition-fast;
+
+      &:hover {
+        color: $color-primary-hover;
+      }
+    }
+  }
+
+  &__back-to-top {
+    background: transparent;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    color: $color-muted;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition:
+      background $transition-fast,
+      color $transition-fast,
+      border-color $transition-fast;
+
+    &:hover {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: $color-primary-hover;
+      color: $color-primary-hover;
+    }
+  }
+}
