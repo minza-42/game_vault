@@ -20,7 +20,11 @@ function GameDetails() {
   const [status, setStatus] = useState<GameStatus>("want");
   const [rating, setRating] = useState<number | null>(null);
   const [notes, setNotes] = useState("");
+  const [coverUrl, setCoverUrl] = useState("");
+
   const [imageError, setImageError] = useState(false);
+  const [previewLoaded, setPreviewLoaded] = useState(false);
+  const [previewError, setPreviewError] = useState(false);
 
   if (loading) {
     return <main className="page">Loading game...</main>;
@@ -42,10 +46,18 @@ function GameDetails() {
   }
 
   function startEditing() {
-    setPlatform(selectedGame!.platform);
-    setStatus(selectedGame!.status);
-    setRating(selectedGame!.rating);
-    setNotes(selectedGame!.notes || "");
+    if (!selectedGame) return;
+
+    setPlatform(selectedGame.platform);
+    setStatus(selectedGame.status);
+    setRating(selectedGame.rating);
+    setNotes(selectedGame.notes || "");
+    setCoverUrl(selectedGame.coverUrl || "");
+
+    setImageError(false);
+    setPreviewLoaded(false);
+    setPreviewError(false);
+
     setEditing(true);
   }
 
@@ -58,6 +70,7 @@ function GameDetails() {
         status,
         rating,
         notes,
+        coverUrl: coverUrl.trim(),
       });
 
       setEditing(false);
@@ -68,11 +81,13 @@ function GameDetails() {
   }
 
   async function handleDelete() {
+    if (!selectedGame || !id) return;
+
     const confirmed = window.confirm(
-      `Are you sure you want to delete ${selectedGame!.title}?`,
+      `Are you sure you want to delete ${selectedGame.title}?`,
     );
 
-    if (!confirmed || !id) return;
+    if (!confirmed) return;
 
     try {
       await removeGame(id);
@@ -80,6 +95,12 @@ function GameDetails() {
     } catch {
       // Error is displayed on the page.
     }
+  }
+
+  function handleCoverUrlChange(value: string) {
+    setCoverUrl(value);
+    setPreviewLoaded(false);
+    setPreviewError(false);
   }
 
   return (
@@ -119,6 +140,57 @@ function GameDetails() {
           {editing ? (
             <div className="game-details__edit">
               <h3>Edit Game</h3>
+
+              <label htmlFor="game-cover">Cover Image URL</label>
+
+              <input
+                id="game-cover"
+                type="url"
+                placeholder="https://example.com/game-cover.jpg"
+                value={coverUrl}
+                onChange={(event) => handleCoverUrlChange(event.target.value)}
+              />
+
+              <p className="form-hint">
+                Paste an image URL to update the game cover.
+              </p>
+
+              {coverUrl.trim() && (
+                <div className="game-details__image-preview">
+                  {!previewLoaded && !previewError && (
+                    <p className="form-hint">Loading image...</p>
+                  )}
+
+                  {previewError && (
+                    <p className="form-error">
+                      Could not load image. Check the image URL.
+                    </p>
+                  )}
+
+                  <img
+                    src={coverUrl}
+                    alt="New game cover preview"
+                    onLoad={() => {
+                      setPreviewLoaded(true);
+                      setPreviewError(false);
+                    }}
+                    onError={() => {
+                      setPreviewLoaded(false);
+                      setPreviewError(true);
+                    }}
+                    style={{
+                      display:
+                        previewLoaded && !previewError ? "block" : "none",
+                    }}
+                  />
+
+                  {previewLoaded && !previewError && (
+                    <p className="image-success">
+                      ✓ Image loaded successfully!
+                    </p>
+                  )}
+                </div>
+              )}
 
               <label htmlFor="game-platform">Platform</label>
               <select
