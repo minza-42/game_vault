@@ -10,8 +10,6 @@ function Sidebar() {
 
         <NavLink to="/games">My Games</NavLink>
 
-        <NavLink to="/steam">Steam Library</NavLink>
-
         <NavLink to="/games/add">Add Game</NavLink>
       </nav>
     </aside>

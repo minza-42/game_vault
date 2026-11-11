@@ -1,19 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { deleteAllGames } from "../services/gameService";
-import { getAllSteamMetadata } from "../services/steamMetadataService";
-import type { SteamMetadata } from "../services/steamMetadataService";
 import type { GameStatus } from "../types/Game";
 
-type SortOption =
-  | "title-asc"
-  | "title-desc"
-  | "rating-desc"
-  | "rating-asc"
-  | "playtime-desc"
-  | "playtime-asc";
+type SortOption = "title-asc" | "title-desc" | "rating-desc" | "rating-asc";
 
 type StatusFilter = "all" | GameStatus;
 
@@ -22,30 +14,6 @@ function Games() {
 
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
-  const [steamMetadata, setSteamMetadata] = useState<SteamMetadata[]>([]);
-
-  // Fetch Steam playtime metadata
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchSteamMetadata() {
-      try {
-        const metadata = await getAllSteamMetadata();
-
-        if (isMounted) {
-          setSteamMetadata(metadata);
-        }
-      } catch (error) {
-        console.error("Could not fetch Steam metadata:", error);
-      }
-    }
-
-    fetchSteamMetadata();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   // Filter states saved in LocalStorage
   const [search, setSearch] = useLocalStorage("games-search", "");
@@ -66,21 +34,6 @@ function Games() {
   const platforms = useMemo(() => {
     return Array.from(new Set(games.map((game) => game.platform))).sort();
   }, [games]);
-
-  // Match Steam metadata to Questlog games
-  const steamMetadataByGameId = useMemo(() => {
-    return new Map<string, SteamMetadata>(
-      steamMetadata
-        .filter(
-          (
-            metadata,
-          ): metadata is SteamMetadata & {
-            questlog_game_id: string;
-          } => metadata.questlog_game_id !== null,
-        )
-        .map((metadata) => [metadata.questlog_game_id, metadata]),
-    );
-  }, [steamMetadata]);
 
   // Filter and sort games
   const filteredGames = useMemo(() => {
@@ -107,42 +60,11 @@ function Games() {
             if (b.rating === null) return -1;
             return a.rating - b.rating;
 
-          case "playtime-desc": {
-            const playtimeA =
-              steamMetadataByGameId.get(a.id)?.playtime_minutes ?? null;
-            const playtimeB =
-              steamMetadataByGameId.get(b.id)?.playtime_minutes ?? null;
-
-            if (playtimeA === null) return 1;
-            if (playtimeB === null) return -1;
-
-            return playtimeB - playtimeA;
-          }
-
-          case "playtime-asc": {
-            const playtimeA =
-              steamMetadataByGameId.get(a.id)?.playtime_minutes ?? null;
-            const playtimeB =
-              steamMetadataByGameId.get(b.id)?.playtime_minutes ?? null;
-
-            if (playtimeA === null) return 1;
-            if (playtimeB === null) return -1;
-
-            return playtimeA - playtimeB;
-          }
-
           default:
             return a.title.localeCompare(b.title);
         }
       });
-  }, [
-    games,
-    search,
-    statusFilter,
-    platformFilter,
-    sortBy,
-    steamMetadataByGameId,
-  ]);
+  }, [games, search, statusFilter, platformFilter, sortBy]);
 
   // Clear all filters
   function clearFilters() {
@@ -157,7 +79,7 @@ function Games() {
     if (games.length === 0 || deleting) return;
 
     const confirmed = window.confirm(
-      `Are you sure you want to delete all ${games.length} games from My Games?\n\nYour Steam library and saved Steam connections will remain untouched.\n\nThis action cannot be undone.`,
+      `Are you sure you want to delete all ${games.length} games from My Games?\n\nThis action cannot be undone.`,
     );
 
     if (!confirmed) return;
@@ -283,8 +205,6 @@ function Games() {
                 <option value="title-desc">Title (Z-A)</option>
                 <option value="rating-desc">Highest rating (5-1)</option>
                 <option value="rating-asc">Lowest rating (1-5)</option>
-                <option value="playtime-desc">Most Playtime</option>
-                <option value="playtime-asc">Least Playtime</option>
               </select>
             </div>
           </div>
@@ -307,56 +227,37 @@ function Games() {
         <p className="games__empty">No games match your filters.</p>
       ) : (
         <div className="games__grid">
-          {filteredGames.map((game) => {
-            const metadata = steamMetadataByGameId.get(game.id);
-
-            const playtime = metadata
-              ? (metadata.playtime_minutes / 60).toFixed(1)
-              : null;
-
-            return (
-              <Link
-                to={`/games/${game.id}`}
-                className="game-card"
-                key={game.id}
+          {filteredGames.map((game) => (
+            <Link to={`/games/${game.id}`} className="game-card" key={game.id}>
+              <div
+                className={`game-card__image ${
+                  game.coverUrl?.includes("steamstatic.com/steam/apps/")
+                    ? "game-card__image--steam"
+                    : ""
+                }`}
               >
-                <div
-                  className={`game-card__image ${
-                    game.coverUrl?.includes("steamstatic.com/steam/apps/")
-                      ? "game-card__image--steam"
-                      : ""
-                  }`}
+                <img src={game.coverUrl} alt={`${game.title} cover`} />
+
+                <span
+                  className={`game-card__status game-card__status--${game.status}`}
                 >
-                  <img src={game.coverUrl} alt={`${game.title} cover`} />
+                  {game.status}
+                </span>
+              </div>
 
-                  <span
-                    className={`game-card__status game-card__status--${game.status}`}
-                  >
-                    {game.status}
-                  </span>
+              <div className="game-card__content">
+                <h3>{game.title}</h3>
+
+                <p className="game-card__platform">{game.platform}</p>
+
+                <div className="game-card__rating">
+                  {game.rating !== null
+                    ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
+                    : "Not rated"}
                 </div>
-
-                <div className="game-card__content">
-                  <h3>{game.title}</h3>
-
-                  <p className="game-card__platform">{game.platform}</p>
-
-                  <div className="game-card__rating">
-                    {game.rating !== null
-                      ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
-                      : "Not rated"}
-                  </div>
-
-                  <p className="game-card__playtime">
-                    <span aria-hidden="true">◷</span>{" "}
-                    {playtime !== null
-                      ? `${playtime} hours played`
-                      : "Not tracked"}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
+              </div>
+            </Link>
+          ))}
         </div>
       )}
     </main>

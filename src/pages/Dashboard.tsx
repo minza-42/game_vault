@@ -1,35 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
-import { getAllSteamMetadata } from "../services/steamMetadataService";
-import type { SteamMetadata } from "../services/steamMetadataService";
 
 function Dashboard() {
   const { games, loading, error } = useGames();
-  const [steamMetadata, setSteamMetadata] = useState<SteamMetadata[]>([]);
-
-  // Fetch Steam playtime metadata
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchSteamMetadata() {
-      try {
-        const metadata = await getAllSteamMetadata();
-
-        if (isMounted) {
-          setSteamMetadata(metadata);
-        }
-      } catch (error) {
-        console.error("Could not fetch Steam metadata:", error);
-      }
-    }
-
-    fetchSteamMetadata();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const totalGames = games.length;
 
@@ -52,20 +25,6 @@ function Dashboard() {
           ratedGames.length
         ).toFixed(1)
       : "N/A";
-
-  // Calculate total Steam playtime
-  const totalPlaytimeMinutes = steamMetadata.reduce(
-    (total, game) => total + game.playtime_minutes,
-    0,
-  );
-
-  const totalPlaytimeHours = (totalPlaytimeMinutes / 60).toLocaleString(
-    "en-US",
-    {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    },
-  );
 
   // Get the four most recently added games
   const recentlyAdded = [...games]
@@ -123,12 +82,6 @@ function Dashboard() {
       value: averageRating,
       icon: "★",
       color: "yellow",
-    },
-    {
-      title: "Total Playtime",
-      value: `${totalPlaytimeHours} hrs`,
-      icon: "⏱️",
-      color: "blue",
     },
   ];
 
@@ -264,7 +217,7 @@ function Dashboard() {
           <div className="dashboard__empty">
             <span>🎮</span>
             <p>Your library is empty. Add your first game!</p>
-            <Link to="/add-game">Add a game →</Link>
+            <Link to="/games/add">Add a game →</Link>
           </div>
         ) : (
           <div className="dashboard__recent-grid">
