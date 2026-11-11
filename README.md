@@ -137,7 +137,6 @@ game_vault/
 ├── app/
 │   ├── public/
 │   ├── src/
-│   │   ├── assets/
 │   │   ├── components/
 │   │   ├── hooks/
 │   │   ├── pages/
