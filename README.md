@@ -73,6 +73,7 @@ API-dokumentation: [Questlog API](https://questlog-api.vercel.app/docs)
 För att hålla koden organiserad och separera återanvändbar logik och API-anrop från komponenterna använder GameVault egna React Hooks.
 
 - `useGames` – Hämtar och hanterar spelsamlingen, inklusive laddnings- och felhantering.
+- `useSaveGame` – Hanterar skapandet av nya spel via Questlog API.
 - `useUpdateGame` – Hanterar uppdatering av spelinformation.
 - `useDeleteGame` – Hanterar borttagning av spel.
 - `useLocalStorage` – Sparar och hämtar värden från webbläsarens LocalStorage. Används för att behålla sökning, statusfilter, plattformsfilter och sortering även efter att sidan laddats om.
@@ -113,7 +114,7 @@ Jag valde därför att ta bort Steam Library och istället fokusera på projekte
 2. Navigera till applikationens mapp:
 
    ```bash
-   cd game_vault/app
+   cd game_vault
    ```
 
 3. Installera beroenden:
@@ -134,19 +135,21 @@ Jag valde därför att ta bort Steam Library och istället fokusera på projekte
 
 ```text
 game_vault/
-├── app/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── styles/
-│   │   ├── types/
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── index.html
-│   └── package.json
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── components/
+│   ├── hooks/
+│   ├── pages/
+│   ├── services/
+│   ├── styles/
+│   ├── types/
+│   ├── App.tsx
+│   └── main.tsx
+├── .gitignore
+├── index.html
+├── package.json
+├── package-lock.json
 └── README.md
 ```
 
