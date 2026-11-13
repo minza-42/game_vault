@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import GameCard from "../components/GameCard";
 import useGames from "../hooks/useGames";
 import useLocalStorage from "../hooks/useLocalStorage";
 import useDeleteAllGames from "../hooks/useDeleteAllGames";
@@ -225,29 +225,7 @@ function Games() {
       ) : (
         <div className="games__grid">
           {filteredGames.map((game) => (
-            <Link to={`/games/${game.id}`} className="game-card" key={game.id}>
-              <div className="game-card__image">
-                <img src={game.coverUrl} alt={`${game.title} cover`} />
-
-                <span
-                  className={`game-card__status game-card__status--${game.status}`}
-                >
-                  {game.status}
-                </span>
-              </div>
-
-              <div className="game-card__content">
-                <h3>{game.title}</h3>
-
-                <p className="game-card__platform">{game.platform}</p>
-
-                <div className="game-card__rating">
-                  {game.rating !== null
-                    ? "★".repeat(game.rating) + "☆".repeat(5 - game.rating)
-                    : "Not rated"}
-                </div>
-              </div>
-            </Link>
+            <GameCard game={game} key={game.id} />
           ))}
         </div>
       )}
