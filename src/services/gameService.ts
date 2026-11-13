@@ -23,8 +23,6 @@ export interface NewGame {
   rating?: number | null;
   coverUrl?: string;
   notes?: string;
-  steamAppId?: number;
-  steamPlaytime?: number;
 }
 
 // PATCH - Update an existing game
@@ -35,10 +33,9 @@ export interface UpdateGame {
   rating?: number | null;
   notes?: string;
   coverUrl?: string;
-  steamAppId?: number;
-  steamPlaytime?: number;
 }
 
+// Update an existing game
 export async function updateGame(
   id: string,
   updates: UpdateGame,
