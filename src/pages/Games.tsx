@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import useGames from "../hooks/useGames";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { deleteAllGames } from "../services/gameService";
+import useDeleteAllGames from "../hooks/useDeleteAllGames";
 import type { GameStatus } from "../types/Game";
 
 type SortOption = "title-asc" | "title-desc" | "rating-desc" | "rating-asc";
@@ -12,19 +12,25 @@ type StatusFilter = "all" | GameStatus;
 function Games() {
   const { games, loading, error } = useGames();
 
-  const [deleting, setDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState("");
+  const {
+    removeAllGames,
+    loading: deleting,
+    error: deleteError,
+  } = useDeleteAllGames();
 
   // Filter states saved in LocalStorage
   const [search, setSearch] = useLocalStorage("games-search", "");
+
   const [statusFilter, setStatusFilter] = useLocalStorage<StatusFilter>(
     "games-status",
     "all",
   );
+
   const [platformFilter, setPlatformFilter] = useLocalStorage(
     "games-platform",
     "all",
   );
+
   const [sortBy, setSortBy] = useLocalStorage<SortOption>(
     "games-sort",
     "title-asc",
@@ -85,22 +91,13 @@ function Games() {
     if (!confirmed) return;
 
     try {
-      setDeleting(true);
-      setDeleteError("");
-
-      await deleteAllGames();
+      await removeAllGames();
 
       alert("All games have been deleted from My Games.");
 
       window.location.reload();
     } catch (error) {
       console.error("Could not delete all games:", error);
-
-      setDeleteError(
-        error instanceof Error ? error.message : "Could not delete all games.",
-      );
-    } finally {
-      setDeleting(false);
     }
   }
 
