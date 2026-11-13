@@ -1,4 +1,3 @@
-
 @use "./variables" as *;
 
 // Main page
@@ -244,6 +243,58 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+}
+
+// Status filter buttons
+.games__status-filter {
+  min-width: 0;
+}
+
+.games__filter-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: $color-muted;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.games__status-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.games__status-button {
+  min-height: 42px;
+  padding: 0.65rem 0.9rem;
+  color: $color-muted;
+  background: $color-background;
+  border: 1px solid $border-color;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background: rgba(139, 92, 246, 0.12);
+    border-color: $color-primary;
+    color: $color-text;
+  }
+
+  &--active {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: $color-primary;
+    color: $color-text;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 3px;
+  }
 }
 
 .games__clear-filters {

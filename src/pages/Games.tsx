@@ -155,21 +155,77 @@ function Games() {
           </div>
 
           <div className="games__filter-group">
-            <div>
-              <label htmlFor="status-filter">Status</label>
-              <select
-                id="status-filter"
-                value={statusFilter}
-                onChange={(event) =>
-                  setStatusFilter(event.target.value as StatusFilter)
-                }
+            <div className="games__status-filter">
+              <span className="games__filter-label">Status</span>
+
+              <div
+                className="games__status-buttons"
+                role="group"
+                aria-label="Filter games by status"
               >
-                <option value="all">All statuses</option>
-                <option value="playing">Playing</option>
-                <option value="completed">Completed</option>
-                <option value="want">Want to Play</option>
-                <option value="dropped">Dropped</option>
-              </select>
+                <button
+                  type="button"
+                  className={`games__status-button ${
+                    statusFilter === "all" ? "games__status-button--active" : ""
+                  }`}
+                  onClick={() => setStatusFilter("all")}
+                  aria-pressed={statusFilter === "all"}
+                >
+                  All
+                </button>
+
+                <button
+                  type="button"
+                  className={`games__status-button ${
+                    statusFilter === "want"
+                      ? "games__status-button--active"
+                      : ""
+                  }`}
+                  onClick={() => setStatusFilter("want")}
+                  aria-pressed={statusFilter === "want"}
+                >
+                  Want to Play
+                </button>
+
+                <button
+                  type="button"
+                  className={`games__status-button ${
+                    statusFilter === "playing"
+                      ? "games__status-button--active"
+                      : ""
+                  }`}
+                  onClick={() => setStatusFilter("playing")}
+                  aria-pressed={statusFilter === "playing"}
+                >
+                  Playing
+                </button>
+
+                <button
+                  type="button"
+                  className={`games__status-button ${
+                    statusFilter === "completed"
+                      ? "games__status-button--active"
+                      : ""
+                  }`}
+                  onClick={() => setStatusFilter("completed")}
+                  aria-pressed={statusFilter === "completed"}
+                >
+                  Completed
+                </button>
+
+                <button
+                  type="button"
+                  className={`games__status-button ${
+                    statusFilter === "dropped"
+                      ? "games__status-button--active"
+                      : ""
+                  }`}
+                  onClick={() => setStatusFilter("dropped")}
+                  aria-pressed={statusFilter === "dropped"}
+                >
+                  Dropped
+                </button>
+              </div>
             </div>
 
             <div>

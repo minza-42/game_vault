@@ -2,6 +2,7 @@
 
 .game-details {
   width: 100%;
+  min-width: 0;
 
   &__back {
     display: inline-block;
@@ -17,16 +18,18 @@
   // Main layout
   &__content {
     display: grid;
-    grid-template-columns: minmax(360px, 560px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 560px) minmax(280px, 1fr);
     gap: clamp(2rem, 4vw, 4rem);
     align-items: start;
     max-width: 1500px;
     width: 100%;
+    min-width: 0;
   }
 
   // Game cover
   &__cover-wrapper {
     width: 100%;
+    min-width: 0;
     aspect-ratio: 460 / 215;
     overflow: hidden;
     border-radius: 14px;
@@ -60,13 +63,15 @@
 
   // Game information
   &__info {
+    width: 100%;
     min-width: 0;
 
     h2 {
       font-size: clamp(2rem, 2.5vw, 3rem);
       line-height: 1.2;
       margin: 1rem 0 0.75rem;
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
+      word-break: normal;
     }
   }
 
@@ -119,6 +124,8 @@
 
   // Notes
   &__notes {
+    width: 100%;
+    min-width: 0;
     padding: 1.5rem;
     background: $color-surface;
     border: 1px solid $border-color;
@@ -132,12 +139,14 @@
     p {
       color: $color-muted;
       line-height: 1.7;
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
+      word-break: normal;
     }
   }
 
   // Edit form
   &__edit {
+    min-width: 0;
     margin-top: 2rem;
     padding: 1.5rem;
     background: $color-surface;
@@ -160,6 +169,7 @@
     textarea,
     input {
       width: 100%;
+      min-width: 0;
       padding: 0.85rem 1rem;
       color: $color-text;
       background: #0d1117;
