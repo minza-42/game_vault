@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and build files
 node_modules
 dist
 dist-ssr
@@ -27,11 +28,3 @@ dist-ssr
 .env
 .env.*
 !.env.example
-
-# Never commit the Steam API key
-server/.env
-
-# Local SQLite database
-server/*.sqlite
-server/*.sqlite-shm
-server/*.sqlite-wal
