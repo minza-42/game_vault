@@ -75,7 +75,8 @@ För att hålla koden organiserad och separera återanvändbar logik och API-anr
 - `useGames` – Hämtar och hanterar spelsamlingen, inklusive laddnings- och felhantering.
 - `useSaveGame` – Hanterar skapandet av nya spel via Questlog API.
 - `useUpdateGame` – Hanterar uppdatering av spelinformation.
-- `useDeleteGame` – Hanterar borttagning av spel.
+- `useDeleteGame` – Hanterar borttagning av enskilda spel.
+- `useDeleteAllGames` – Hanterar borttagning av samtliga spel från spelsamlingen.
 - `useLocalStorage` – Sparar och hämtar värden från webbläsarens LocalStorage. Används för att behålla sökning, statusfilter, plattformsfilter och sortering även efter att sidan laddats om.
 
 Genom att använda egna hooks kan jag återanvända logik och hålla komponenterna enklare. Det gör också att komponenterna kan fokusera mer på presentation och användarinteraktion istället för att hantera all logik själva.
